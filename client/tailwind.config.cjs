@@ -6,13 +6,10 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        primary: "#0a3d62",     // Deep Navy Blue from header/footer
-        secondary: "#ff7043",   // Bright Coral (e.g., “Become a Buddy” button)
-        accent: "#ffc107",      // Soft Yellow-Orange (used in illustrations)
-        light: "#fff5ec",       // Background beige
-        dark: "#1f2d3d",        // Deep dark blue-gray for texts
-        neutral: "#f8f8f8",     // Light neutral background
-        textPrimary: "#2b2d42", // Main text color
+        primary: '#0055FF',       // landing page blue
+        secondary: '#00AFFF',     // light blue accent
+        darkgray: '#1F1F1F',      // main text
+        lightgray: '#F5F5F5',     // background
       },
       fontFamily: {
         poppins: ['"Poppins"', 'sans-serif'],
