@@ -434,7 +434,7 @@ const HowItWorks = () => {
 
       <Faq />
 
-      <Footer />
+     
     </div>
   );
 };
