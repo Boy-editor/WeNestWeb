@@ -1,12 +1,12 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-{/* Header Pages */}
+// Header Pages
 import Home from "./pages/Home";
 import AboutUs from "./pages/AboutUs";
 import HowItWorks from "./pages/HowItWorks";
 import Properties from "./pages/Properties";
 
-{/* Footer Pages */}
+// Footer Pages
 import Faq from "./components/Faq";
 
 function App() {
