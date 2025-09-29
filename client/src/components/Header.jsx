@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link, } from "react-router-dom";
 
 const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -31,9 +32,9 @@ const Header = () => {
     <header className="w-full bg-white/95 backdrop-blur-md shadow-lg sticky top-0 z-50 border-b border-gray-100">
       <div className="container mx-auto flex items-center justify-between py-4 px-4 sm:px-6 lg:px-12">
         {/* Logo */}
-        <div className="text-xl sm:text-2xl lg:text-3xl font-bold cursor-pointer bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent hover:from-teal-600 hover:to-emerald-600 transition-all duration-300" tabIndex="0">
-          WeNest
-        </div>
+        <Link to="/" className="flex items-center flex-shrink-0" >
+            <img src="/assets/WE NEST 4.png" alt="WeNest Logo" className="w-36" />
+          </Link>
 
         {/* Navigation Links - Desktop */}
         <nav className="hidden lg:flex space-x-8">
