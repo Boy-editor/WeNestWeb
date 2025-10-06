@@ -1,4 +1,7 @@
 import React from "react";
+import { Link } from "react-router-dom";
+import { FaFacebook, FaInstagram, FaLinkedinIn  } from 'react-icons/fa';
+import { FaXTwitter } from 'react-icons/fa6';
 
 const Footer = () => {
   return (
@@ -13,9 +16,10 @@ const Footer = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
             {/* Company Info */}
             <div className="lg:col-span-2">
-              <div className="text-3xl font-bold mb-4 bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent">
-                WeNest
-              </div>
+              {/* Logo */}
+              <Link to="/" className="flex items-center flex-shrink-0">
+                <img src="/assets/WE NEST 4.png" alt="WeNest Logo" className="w-36 my-2" />
+              </Link>
               <p className="text-gray-300 mb-6 leading-relaxed max-w-md">
                 Nigeria's leading real estate platform connecting landlords, tenants, and agencies seamlessly across all 36 states.
               </p>
@@ -23,10 +27,10 @@ const Footer = () => {
               {/* Social Media Links */}
               <div className="flex space-x-4">
                 {[
-                  { name: "Facebook", icon: "📘" },
-                  { name: "Twitter", icon: "🐦" },
-                  { name: "Instagram", icon: "📷" },
-                  { name: "LinkedIn", icon: "💼" }
+                  { name: "Facebook", icon: <FaFacebook size={20} />, href: "#" },
+                  { name: "Twitter", icon: <FaXTwitter size={20} />, href: "#" },
+                  { name: "Instagram", icon: <FaInstagram size={20} />, href: "#" },
+                  { name: "LinkedIn", icon: <FaLinkedinIn size={20} />, href: "#" }
                 ].map((social) => (
                   <a
                     key={social.name}
@@ -57,7 +61,7 @@ const Footer = () => {
                   <li key={link.name}>
                     <a
                       href={link.href}
-                      className="text-gray-300 hover:text-emerald-400 transition-colors duration-200 hover:pl-2 transform transition-all"
+                      className="text-gray-300 hover:text-emerald-400  duration-200 hover:pl-2 transform transition-all"
                     >
                       {link.name}
                     </a>
@@ -80,7 +84,7 @@ const Footer = () => {
                   <li key={link.name}>
                     <a
                       href={link.href}
-                      className="text-gray-300 hover:text-emerald-400 transition-colors duration-200 hover:pl-2 transform transition-all"
+                      className="text-gray-300 hover:text-emerald-400  duration-200 hover:pl-2 transform transition-all"
                     >
                       {link.name}
                     </a>
