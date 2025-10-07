@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { FaFacebook, FaInstagram, FaLinkedinIn  } from 'react-icons/fa';
 import { FaXTwitter } from 'react-icons/fa6';
+import { Mail, Phone, LocationEdit } from "lucide-react";
 
 const Footer = () => {
   return (
@@ -11,91 +12,57 @@ const Footer = () => {
       <div className="absolute bottom-0 right-0 w-32 h-32 bg-teal-600/10 rounded-full blur-2xl"></div>
       
       <div className="relative z-10">
-        {/* Main Footer Content */}
-        <div className="container mx-auto py-16 px-6 lg:px-12">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
-            {/* Company Info */}
-            <div className="lg:col-span-2">
+        {/* logo and socials */}
+        <div className="border-t border-gray-700 bg-gray-800/50 backdrop-blur-sm">
+          <div className="container mx-auto py-8 px-6 lg:px-12">
+            <div className="flex flex-col md:flex-row items-left justify-between gap-6">
               {/* Logo */}
               <Link to="/" className="flex items-center flex-shrink-0">
-                <img src="/assets/WE NEST 4.png" alt="WeNest Logo" className="w-36 my-2" />
+                <img src="/assets/logo/WE NEST 4.png" alt="WeNest Logo" className="w-36 my-2" />
               </Link>
+                {/* Social Media Links */}
+              <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
+                <div className="flex items-center justify-center w-full mb-6">
+                  <p className="hidden sm:block mr-3">Follow us:</p>
+                  <div className="flex space-x-4 items-center">
+                    {[
+                      { name: "Facebook", icon: <FaFacebook size={20} />, href: "#" },
+                      { name: "Twitter", icon: <FaXTwitter size={20} />, href: "#" },
+                      { name: "Instagram", icon: <FaInstagram size={20} />, href: "#" },
+                      { name: "LinkedIn", icon: <FaLinkedinIn size={20} />, href: "#" }
+                    ].map((social) => (
+                      <a
+                        key={social.name}
+                        href="#"
+                        className="w-10 h-10 bg-gray-700 hover:bg-gradient-to-r hover:from-emerald-600 hover:to-teal-600 rounded-lg flex items-center justify-center transition-all duration-300 transform hover:scale-110"
+                        aria-label={social.name}
+                      >
+                        <span className="text-lg">{social.icon}</span>
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Main Footer Content */}
+        <div className="container mx-auto py-16 px-6 lg:px-12 border-t border-gray-700">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12 ">
+            {/* Company Info */}
+            <div className="lg:col-span-2">
+              
               <p className="text-gray-300 mb-6 leading-relaxed max-w-md">
                 Nigeria's leading real estate platform connecting landlords, tenants, and agencies seamlessly across all 36 states.
               </p>
               
-              {/* Social Media Links */}
-              <div className="flex space-x-4">
-                {[
-                  { name: "Facebook", icon: <FaFacebook size={20} />, href: "#" },
-                  { name: "Twitter", icon: <FaXTwitter size={20} />, href: "#" },
-                  { name: "Instagram", icon: <FaInstagram size={20} />, href: "#" },
-                  { name: "LinkedIn", icon: <FaLinkedinIn size={20} />, href: "#" }
-                ].map((social) => (
-                  <a
-                    key={social.name}
-                    href="#"
-                    className="w-10 h-10 bg-gray-700 hover:bg-gradient-to-r hover:from-emerald-600 hover:to-teal-600 rounded-lg flex items-center justify-center transition-all duration-300 transform hover:scale-110"
-                    aria-label={social.name}
-                  >
-                    <span className="text-lg">{social.icon}</span>
-                  </a>
-                ))}
-              </div>
-            </div>
-
-            {/* Quick Links */}
-            <div>
-              <h3 className="font-bold text-lg mb-6 text-emerald-400">Quick Links</h3>
-              <ul className="space-y-3">
-                {[
-                  { name: "Home", href: "/" },
-                  { name: "About Us", href: "/about" },
-                  { name: "How It Works", href: "/how-it-works" },
-                  { name: "Properties", href: "/properties" },
-                  { name: "Pricing", href: "/pricing" },
-                  { name: "Blog", href: "/blog" },
-                  { name: "Support", href: "/support" },
-                  { name: "Faq", href: "/faq" }
-                ].map((link) => (
-                  <li key={link.name}>
-                    <a
-                      href={link.href}
-                      className="text-gray-300 hover:text-emerald-400  duration-200 hover:pl-2 transform transition-all"
-                    >
-                      {link.name}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Support & Legal */}
-            <div>
-              <h3 className="font-bold text-lg mb-6 text-emerald-400">Support & Legal</h3>
-              <ul className="space-y-3 mb-6">
-                {[
-                  { name: "Terms & Conditions", href: "/terms" },
-                  { name: "Privacy Policy", href: "/privacy" },
-                  { name: "FAQs", href: "/faqs" },
-                  { name: "Careers", href: "/careers" },
-                  { name: "Contact Us", href: "/contact" }
-                ].map((link) => (
-                  <li key={link.name}>
-                    <a
-                      href={link.href}
-                      className="text-gray-300 hover:text-emerald-400  duration-200 hover:pl-2 transform transition-all"
-                    >
-                      {link.name}
-                    </a>
-                  </li>
-                ))}
-              </ul>
+              
 
               {/* Contact Info */}
               <div className="space-y-3">
                 <div className="flex items-center space-x-2">
-                  <span className="text-emerald-400">📧</span>
+                  <span className="text-emerald-400"><Mail size={20} /></span>
                   <a 
                     href="mailto:support@wenest.com"
                     className="text-gray-300 hover:text-emerald-400 transition-colors duration-200"
@@ -104,7 +71,7 @@ const Footer = () => {
                   </a>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <span className="text-emerald-400">📞</span>
+                  <span className="text-emerald-400"><Phone size={20} /></span>
                   <a 
                     href="tel:+2348001234567"
                     className="text-gray-300 hover:text-emerald-400 transition-colors duration-200"
@@ -112,10 +79,92 @@ const Footer = () => {
                     +234 800 123 4567
                   </a>
                 </div>
+                <div className="flex items-center space-x-2">
+                  <span className="text-emerald-400"><LocationEdit size={20} /></span>
+                  <a 
+                    href="tel:+2348001234567"
+                    className="text-gray-300 hover:text-emerald-400 transition-colors duration-200"
+                  >
+                    Umuahia, Abia State, Nigeria
+                  </a>
+                </div>
               </div>
             </div>
+
+           {/* <div className="grid grid-cols-2 lg:flex lg:justify-between"> */}
+              {/* Quick Links */}
+              <div>
+                <h3 className="font-bold text-lg mb-6 text-emerald-400">Quick Links</h3>
+                <ul className="space-y-3">
+                  {[
+                    { name: "Home", href: "/" },
+                    { name: "About Us", href: "/about" },
+                    { name: "How It Works", href: "/how-it-works" },
+                    { name: "Properties", href: "/properties" },
+                    { name: "Pricing", href: "/pricing" },
+                    { name: "Blog", href: "/blog" },
+                    { name: "Support", href: "/support" },
+                    { name: "Faq", href: "/faq" }
+                  ].map((link) => (
+                    <li key={link.name}>
+                      <a
+                        href={link.href}
+                        className="text-gray-300 hover:text-emerald-400  duration-200 hover:pl-2 transform transition-all"
+                      >
+                        {link.name}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Support & Legal */}
+              <div>
+                <h3 className="font-bold text-lg mb-6 text-emerald-400">Support & Legal</h3>
+                <ul className="space-y-3 mb-6">
+                  {[
+                    { name: "Terms & Conditions", href: "/terms" },
+                    { name: "Privacy Policy", href: "/privacy" },
+                    { name: "FAQs", href: "/faqs" },
+                    { name: "Careers", href: "/careers" },
+                    { name: "Contact Us", href: "/contact" }
+                  ].map((link) => (
+                    <li key={link.name}>
+                      <a
+                        href={link.href}
+                        className="text-gray-300 hover:text-emerald-400  duration-200 hover:pl-2 transform transition-all"
+                      >
+                        {link.name}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+
+                {/* Contact Info 
+                <div className="space-y-3">
+                  <div className="flex items-center space-x-2">
+                    <span className="text-emerald-400">📧</span>
+                    <a 
+                      href="mailto:support@wenest.com"
+                      className="text-gray-300 hover:text-emerald-400 transition-colors duration-200"
+                    >
+                      support@wenest.com
+                    </a>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <span className="text-emerald-400">📞</span>
+                    <a 
+                      href="tel:+2348001234567"
+                      className="text-gray-300 hover:text-emerald-400 transition-colors duration-200"
+                    >
+                      +234 800 123 4567
+                    </a>
+                  </div>
+                </div> */}
+              </div>
+           {/* </div> */}
           </div>
-        </div>
+        </div> 
 
         {/* Newsletter Subscription */}
         <div className="border-t border-gray-700 bg-gray-800/50 backdrop-blur-sm">

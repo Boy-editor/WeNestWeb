@@ -1,43 +1,92 @@
-import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect, useLayoutEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { User } from "lucide-react";
+import logoDark from "/assets/logo/WENEST3.png"; // dark logo (for white header)
+ import logoLight from "/assets/logo/WENEST1.png"; // light/white logo (for transparent header)
 
 const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState("");
   const [isPagesDropdownOpen, setIsPagesDropdownOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const location = useLocation();
 
-  const toggleMobileMenu = () => {
-    setIsMobileMenuOpen(!isMobileMenuOpen);
-  };
+  // Determine current page based on URL
+  useEffect(() => {
+    const path = location.pathname;
+    const pageMap = {
+      "/": "Home",
+      "/properties": "Properties",
+      "/pages": "Pages",
+      "/about": "Pages",
+      "/our-services": "Pages",
+      "/pricing": "Pages",
+      "/contact": "Pages",
+      "/faqs": "Pages",
+      "/privacy-policy": "Pages",
+      "/blog": "Blog",
+      "/dashboard": "Dashboard",
+    };
+    setCurrentPage(pageMap[path] || "Home");
+  }, [location]);
+
+  // Detect mobile (width < 1024px for lg breakpoint)
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 1024);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
+  // Set initial value before paint (avoids initial flash)
+  useLayoutEffect(() => {
+    const y = window.scrollY || window.pageYOffset || document.documentElement.scrollTop;
+    setIsScrolled(y > 20);
+  }, []);
+
+  // Scroll handler with rAF + hysteresis to avoid jitter
+  useEffect(() => {
+    let ticking = false;
+    const onScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const y = window.scrollY || window.pageYOffset || document.documentElement.scrollTop;
+          setIsScrolled((prev) => {
+            // Hysteresis: only switch to true above 20px, switch to false below 10px
+            if (!prev && y > 20) return true;
+            if (prev && y < 10) return false;
+            return prev;
+          });
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  const toggleMobileMenu = () => setIsMobileMenuOpen((s) => !s);
 
   const handleNavClick = (pageName) => {
     setCurrentPage(pageName);
     setIsMobileMenuOpen(false);
   };
 
-  // Determine current page based on URL
-  useEffect(() => {
-    const path = window.location.pathname;
-    const pageMap = {
-      '/': 'Home',
-      '/properties': 'Properties',
-      '/pages': 'Pages',
-      '/about': 'Pages',
-      '/our-services': 'Pages',
-      '/pricing': 'Pages',
-      '/contact': 'Pages',
-      '/faqs': 'Pages',
-      '/privacy-policy': 'Pages',
-      '/blog': 'Blog',
-      '/dashboard': 'Dashboard'
-    };
-    setCurrentPage(pageMap[path] || 'Home');
-  }, []);
+  // Colors toggled by isScrolled (but always "scrolled" style on mobile)
+  const navTextClass = isMobile || isScrolled ? "text-gray-700" : "text-white";
+  const iconColorClass = isMobile || isScrolled ? "bg-gray-700" : "bg-white";
+  const headerBgClass = isMobile
+    ? "bg-white/95 shadow-lg border-b border-gray-100"
+    : isScrolled
+    ? "bg-white/95 shadow-lg border-b border-gray-100"
+    : "bg-transparent";
 
   const pagesLinks = [
-    { name: "About Us", href: "/about" },
     { name: "How It Works", href: "/how-it-works" },
+    { name: "About Us", href: "/about" },
     { name: "Our Services", href: "/our-services" },
     { name: "Pricing", href: "/pricing" },
     { name: "Contact Us", href: "/contact" },
@@ -46,52 +95,60 @@ const Header = () => {
   ];
 
   return (
-    <header className="w-full bg-white/95 backdrop-blur-md shadow-lg sticky top-0 z-50 border-b border-gray-100">
-      <div className="container mx-auto flex items-center justify-between py-4 px-4 sm:px-3 lg:px-6">
+    <header
+      className={`w-full fixed top-0 z-50 transition-colors duration-300 ${headerBgClass}`}
+    >
+      <div className="container mx-auto flex items-center justify-between py-4 px-4 sm:px-6 lg:px-12">
         {/* Logo */}
-        <Link to="/" className="flex items-center flex-shrink-0">
-          <img src="/assets/WE NEST 3.png" alt="WeNest Logo" className="w-36" />
+        <Link to="/" className="flex items-center flex-shrink-0" onClick={() => handleNavClick("Home")}>
+          {/* Use two logo files if possible; fallback to single */}
+           <img src={isScrolled ? logoDark : logoLight} alt="WeNest Logo" className="w-36" /> 
+          {/*<img
+            src="/assets/logo/WE NEST 1.png"
+            alt="WeNest Logo"
+            className={`w-36 transition-opacity duration-300 ${
+              isMobile || isScrolled ? "opacity-100" : "opacity-90"
+            }`}
+          />*/}
         </Link>
 
         {/* Navigation Links - Desktop */}
-        <nav className="hidden lg:flex space-x-8">
+        <nav className={`hidden lg:flex space-x-8 items-center`}>
           {[
             { name: "Home", href: "/" },
             { name: "Properties", href: "/properties" },
           ].map((link) => {
             const isActive = currentPage === link.name;
             return (
-              <a
+              <Link
                 key={link.name}
-                href={link.href}
+                to={link.href}
                 onClick={() => handleNavClick(link.name)}
                 className={`font-medium transition-colors duration-200 relative group rounded-md px-2 py-1 ${
-                  isActive 
-                    ? "text-emerald-600" 
-                    : "text-gray-700 hover:text-emerald-600"
+                  isActive
+                    ? "text-emerald-600"
+                    : navTextClass + " hover:text-emerald-600"
                 }`}
               >
                 {link.name}
-                <span className={`absolute -bottom-1 left-2 h-0.5 bg-gradient-to-r from-emerald-600 to-teal-600 transition-all duration-300 ${
-                  isActive 
-                    ? "w-[calc(100%-16px)]" 
-                    : "w-0 group-hover:w-[calc(100%-16px)]"
-                }`}></span>
-              </a>
+                <span
+                  className={`absolute -bottom-1 left-2 h-0.5 bg-gradient-to-r from-emerald-600 to-teal-600 transition-all duration-300 ${
+                    isActive ? "w-[calc(100%-16px)]" : "w-0 group-hover:w-[calc(100%-16px)]"
+                  }`}
+                />
+              </Link>
             );
           })}
 
           {/* Pages Dropdown */}
-          <div 
+          <div
             className="relative"
             onMouseEnter={() => setIsPagesDropdownOpen(true)}
             onMouseLeave={() => setIsPagesDropdownOpen(false)}
           >
             <button
               className={`font-medium transition-colors duration-200 relative group rounded-md px-2 py-1 ${
-                currentPage === 'Pages'
-                  ? "text-emerald-600"
-                  : "text-gray-700 hover:text-emerald-600"
+                currentPage === "Pages" ? "text-emerald-600" : navTextClass
               }`}
             >
               Pages
@@ -105,68 +162,73 @@ const Header = () => {
               >
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
               </svg>
-              <span className={`absolute -bottom-1 left-2 h-0.5 bg-gradient-to-r from-emerald-600 to-teal-600 transition-all duration-300 ${
-                currentPage === 'Pages'
-                  ? "w-[calc(100%-16px)]" 
-                  : "w-0 group-hover:w-[calc(100%-16px)]"
-              }`}></span>
+              <span
+                className={`absolute -bottom-1 left-2 h-0.5 bg-gradient-to-r from-emerald-600 to-teal-600 transition-all duration-300 ${
+                  currentPage === "Pages" ? "w-[calc(100%-16px)]" : "w-0 group-hover:w-[calc(100%-16px)]"
+                }`}
+              />
             </button>
 
             {/* Dropdown Menu */}
             {isPagesDropdownOpen && (
               <div className="absolute top-full left-0 mt-2 w-48 bg-white rounded-lg shadow-xl py-2 border border-gray-100">
                 {pagesLinks.map((link) => (
-                  <a
+                  <Link
                     key={link.name}
-                    href={link.href}
+                    to={link.href}
                     className="block px-4 py-2 text-gray-700 hover:bg-emerald-50 hover:text-emerald-600 transition-colors duration-200"
-                    onClick={() => handleNavClick('Pages')}
+                    onClick={() => handleNavClick("Pages")}
                   >
                     {link.name}
-                  </a>
+                  </Link>
                 ))}
               </div>
             )}
           </div>
 
-          <a
-            href="/blog"
+          <Link
+            to="/blog"
             onClick={() => handleNavClick("Blog")}
             className={`font-medium transition-colors duration-200 relative group rounded-md px-2 py-1 ${
               currentPage === "Blog"
-                ? "text-emerald-600" 
-                : "text-gray-700 hover:text-emerald-600"
+                ? "text-emerald-600"
+                : navTextClass + " hover:text-emerald-600"
             }`}
           >
             Blog
-            <span className={`absolute -bottom-1 left-2 h-0.5 bg-gradient-to-r from-emerald-600 to-teal-600 transition-all duration-300 ${
-              currentPage === "Blog"
-                ? "w-[calc(100%-16px)]" 
-                : "w-0 group-hover:w-[calc(100%-16px)]"
-            }`}></span>
-          </a>
+            <span
+              className={`absolute -bottom-1 left-2 h-0.5 bg-gradient-to-r from-emerald-600 to-teal-600 transition-all duration-300 ${
+                currentPage === "Blog" ? "w-[calc(100%-16px)]" : "w-0 group-hover:w-[calc(100%-16px)]"
+              }`}
+            />
+          </Link>
 
-          <a
-            href="/dashboard"
+          <Link
+            to="/dashboard"
             onClick={() => handleNavClick("Dashboard")}
             className={`font-medium transition-colors duration-200 relative group rounded-md px-2 py-1 ${
               currentPage === "Dashboard"
-                ? "text-emerald-600" 
-                : "text-gray-700 hover:text-emerald-600"
+                ? "text-emerald-600"
+                : navTextClass + " hover:text-emerald-600"
             }`}
           >
             Dashboard
-            <span className={`absolute -bottom-1 left-2 h-0.5 bg-gradient-to-r from-emerald-600 to-teal-600 transition-all duration-300 ${
-              currentPage === "Dashboard"
-                ? "w-[calc(100%-16px)]" 
-                : "w-0 group-hover:w-[calc(100%-16px)]"
-            }`}></span>
-          </a>
+            <span
+              className={`absolute -bottom-1 left-2 h-0.5 bg-gradient-to-r from-emerald-600 to-teal-600 transition-all duration-300 ${
+                currentPage === "Dashboard" ? "w-[calc(100%-16px)]" : "w-0 group-hover:w-[calc(100%-16px)]"
+              }`}
+            />
+          </Link>
         </nav>
 
         {/* Auth Buttons - Desktop */}
         <div className="hidden lg:flex space-x-4">
-          <button className="border-2 border-emerald-600 text-emerald-600 px-5 py-2 rounded-xl font-medium hover:bg-emerald-50 transition-all duration-200 flex items-center space-x-2">
+          <button
+            onClick={() => handleNavClick("Sign Up")}
+            className={`border-2 border-emerald-600 px-5 py-2 rounded-xl font-medium hover:bg-emerald-50 flex items-center space-x-2 transition-all duration-200 ${
+              isMobile || isScrolled ? "text-emerald-600" : "text-white hover:text-emerald-500"
+            }`}
+          >
             <User size={18} />
             <span>Sign Up</span>
           </button>
@@ -178,26 +240,28 @@ const Header = () => {
         {/* Mobile Menu Button */}
         <button
           onClick={toggleMobileMenu}
-          className="lg:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors duration-200"
+          className={`lg:hidden p-2 rounded-lg transition-all duration-200 ${
+            isMobile || isScrolled ? "hover:bg-gray-100" : "hover:bg-white/10"
+          }`}
           aria-label="Toggle mobile menu"
           aria-expanded={isMobileMenuOpen}
         >
           <div className="w-6 h-6 flex flex-col justify-center items-center">
             <span
-              className={`bg-gray-700 block transition-all duration-300 ease-out h-0.5 w-6 rounded-sm ${
+              className={`block h-0.5 w-6 rounded-sm transition-transform duration-300 ${
                 isMobileMenuOpen ? "rotate-45 translate-y-1.5" : "-translate-y-0.5"
-              }`}
-            ></span>
+              } ${iconColorClass}`}
+            />
             <span
-              className={`bg-gray-700 block transition-all duration-300 ease-out h-0.5 w-6 rounded-sm my-0.5 ${
+              className={`block h-0.5 w-6 rounded-sm my-0.5 ${
                 isMobileMenuOpen ? "opacity-0" : "opacity-100"
-              }`}
-            ></span>
+              } ${iconColorClass}`}
+            />
             <span
-              className={`bg-gray-700 block transition-all duration-300 ease-out h-0.5 w-6 rounded-sm ${
+              className={`block h-0.5 w-6 rounded-sm transition-transform duration-300 ${
                 isMobileMenuOpen ? "-rotate-45 -translate-y-1.5" : "translate-y-0.5"
-              }`}
-            ></span>
+              } ${iconColorClass}`}
+            />
           </div>
         </button>
       </div>
@@ -217,9 +281,9 @@ const Header = () => {
             ].map((link) => {
               const isActive = currentPage === link.name;
               return (
-                <a
+                <Link
                   key={link.name}
-                  href={link.href}
+                  to={link.href}
                   className={`block font-medium py-2 px-4 rounded-lg transition-all duration-200 ${
                     isActive
                       ? "text-emerald-600 bg-emerald-50 border-l-4 border-emerald-600"
@@ -228,7 +292,7 @@ const Header = () => {
                   onClick={() => handleNavClick(link.name)}
                 >
                   {link.name}
-                </a>
+                </Link>
               );
             })}
 
@@ -237,20 +301,20 @@ const Header = () => {
               <div className="font-medium py-2 px-4 text-emerald-900">Pages</div>
               <div className="pl-4 space-y-2">
                 {pagesLinks.map((link) => (
-                  <a
+                  <Link
                     key={link.name}
-                    href={link.href}
+                    to={link.href}
                     className="block py-2 px-4 text-gray-700 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors duration-200"
-                    onClick={() => handleNavClick('Pages')}
+                    onClick={() => handleNavClick("Pages")}
                   >
                     {link.name}
-                  </a>
+                  </Link>
                 ))}
               </div>
             </div>
 
-            <a
-              href="/blog"
+            <Link
+              to="/blog"
               className={`block font-medium py-2 px-4 rounded-lg transition-all duration-200 ${
                 currentPage === "Blog"
                   ? "text-emerald-600 bg-emerald-50 border-l-4 border-emerald-600"
@@ -259,10 +323,10 @@ const Header = () => {
               onClick={() => handleNavClick("Blog")}
             >
               Blog
-            </a>
+            </Link>
 
-            <a
-              href="/dashboard"
+            <Link
+              to="/dashboard"
               className={`block font-medium py-2 px-4 rounded-lg transition-all duration-200 ${
                 currentPage === "Dashboard"
                   ? "text-emerald-600 bg-emerald-50 border-l-4 border-emerald-600"
@@ -271,12 +335,15 @@ const Header = () => {
               onClick={() => handleNavClick("Dashboard")}
             >
               Dashboard
-            </a>
+            </Link>
           </nav>
 
           {/* Mobile Auth Buttons */}
           <div className="space-y-3 pt-4 border-t border-gray-200">
-            <button className="w-full border-2 border-emerald-600 text-emerald-600 py-3 rounded-xl font-medium hover:bg-emerald-50 transition-all duration-200 flex items-center justify-center space-x-2">
+            <button
+              onClick={() => handleNavClick("Sign Up")}
+              className="w-full border-2 border-emerald-600 text-emerald-600 py-3 rounded-xl font-medium hover:bg-emerald-50 transition-all duration-200 flex items-center justify-center space-x-2"
+            >
               <User size={18} />
               <span>Sign Up</span>
             </button>

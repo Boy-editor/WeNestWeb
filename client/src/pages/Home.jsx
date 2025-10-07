@@ -1,39 +1,123 @@
 import React from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import HeroSection from "../components/HeroSection";
+import { MapPin, Star, Search, Users, Calendar, HomeIcon } from "lucide-react"; // Added for icon replacement
 
 const Home = () => {
+  // Sample properties matching Properties.jsx data (reused 6 varied ones)
+  const featuredProperties = [
+    {
+      id: 1,
+      title: "Modern 3-Bedroom Apartment",
+      location: "Victoria Island, Lagos",
+      state: "Lagos",
+      price: 2500000,
+      period: "year",
+      type: "Apartment",
+      bedrooms: 3,
+      bathrooms: 2,
+      area: "120 sqm",
+      images: ["/assets/home/house-1.jpg"],
+      amenities: ["Swimming Pool", "Gym", "Security", "Parking"],
+      isVerified: true,
+      isFeatured: true,
+      rating: 4.8,
+    },
+    {
+      id: 2,
+      title: "Cozy 2-Bedroom House",
+      location: "Lekki Phase 1, Lagos",
+      state: "Lagos",
+      price: 1800000,
+      period: "year",
+      type: "House",
+      bedrooms: 2,
+      bathrooms: 2,
+      area: "95 sqm",
+      images: ["/assets/home/house-2.jpg"],
+      amenities: ["Garden", "Security", "Parking"],
+      isVerified: true,
+      isFeatured: false,
+      rating: 4.5,
+    },
+    {
+      id: 3,
+      title: "Executive 4-Bedroom Duplex",
+      location: "Ikoyi, Lagos",
+      state: "Lagos",
+      price: 4200000,
+      period: "year",
+      type: "Duplex",
+      bedrooms: 4,
+      bathrooms: 3,
+      area: "200 sqm",
+      images: ["/assets/home/house-3.jpg"],
+      amenities: ["Swimming Pool", "Gym", "Security", "Parking", "Generator"],
+      isVerified: true,
+      isFeatured: true,
+      rating: 4.9,
+    },
+    {
+      id: 4,
+      title: "Affordable 1-Bedroom Studio",
+      location: "Surulere, Lagos",
+      state: "Lagos",
+      price: 800000,
+      period: "year",
+      type: "Studio",
+      bedrooms: 1,
+      bathrooms: 1,
+      area: "45 sqm",
+      images: ["/assets/home/house-4.jpg"],
+      amenities: ["Security", "Parking"],
+      isVerified: true,
+      isFeatured: false,
+      rating: 4.2,
+    },
+    {
+      id: 5,
+      title: "Luxury 5-Bedroom Villa",
+      location: "Banana Island, Lagos",
+      state: "Lagos",
+      price: 8500000,
+      period: "year",
+      type: "Villa",
+      bedrooms: 5,
+      bathrooms: 4,
+      area: "350 sqm",
+      images: ["/assets/home/house-5.jpg"],
+      amenities: ["Swimming Pool", "Gym", "Security", "Parking", "Generator", "Maid's Room"],
+      isVerified: true,
+      isFeatured: true,
+      rating: 5.0,
+    },
+    {
+      id: 6,
+      title: "Commercial Office Space",
+      location: "Central Business District, Abuja",
+      state: "FCT",
+      price: 3200000,
+      period: "year",
+      type: "Commercial",
+      bedrooms: 0,
+      bathrooms: 2,
+      area: "150 sqm",
+      images: ["/assets/home/house-6.jpg"],
+      amenities: ["Security", "Parking", "Generator", "Air Conditioning"],
+      isVerified: true,
+      isFeatured: false,
+      rating: 4.6,
+    },
+  ];
+
+  const formatPrice = (price) => `₦${price.toLocaleString()}`;
+
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
 
-      {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-emerald-600 via-teal-600 to-cyan-700 text-white pt-24 md:pt-32 overflow-hidden">
-        <div className="absolute inset-0 bg-black/20"></div>
-        <div className="container mx-auto px-6 md:px-12 text-center md:text-left relative z-10">
-          <div className="max-w-4xl">
-            <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight">
-              Find Your Perfect Home with 
-              <span className="text-amber-300"> WeNest</span>
-            </h1>
-            <p className="text-xl md:text-2xl mb-8 max-w-2xl mx-auto md:mx-0 text-gray-100 leading-relaxed">
-              Connecting landlords, tenants, and agencies seamlessly across Nigeria.
-            </p>
-            <div className="flex flex-col sm:flex-row justify-center md:justify-start gap-4 mb-12">
-              <button className="bg-amber-500 hover:bg-amber-600 text-white font-bold px-8 py-4 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200">
-                Get Started Today
-              </button>
-              <button className="border-2 border-white text-white font-semibold px-8 py-4 rounded-xl hover:bg-white hover:text-emerald-700 transition-all duration-200 backdrop-blur-sm">
-                Learn More
-              </button>
-            </div>
-          </div>
-        </div>
-        
-        {/* Decorative Elements */}
-        <div className="absolute top-20 right-10 w-32 h-32 bg-amber-400/20 rounded-full blur-xl"></div>
-        <div className="absolute bottom-10 left-20 w-24 h-24 bg-cyan-400/30 rounded-full blur-lg"></div>
-      </section>
+      <HeroSection />
 
       {/* Featured Properties Section */}
       <section className="py-20 bg-gradient-to-b from-gray-50 to-white">
@@ -47,31 +131,60 @@ const Home = () => {
             </p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {[1, 2, 3, 4, 5, 6].map((property) => (
+            {featuredProperties.map((property) => (
               <div
-                key={property}
+                key={property.id}
                 className="bg-white rounded-2xl shadow-md hover:shadow-2xl overflow-hidden group transform hover:scale-105 transition-all duration-300 border border-gray-100"
               >
                 <div className="relative overflow-hidden">
                   <img
-                    src={`/images/property-${property}.jpg`}
-                    alt={`Property ${property}`}
+                    src={property.images[0]}
+                    alt={property.title}
                     className="w-full h-56 object-cover group-hover:scale-110 transition-transform duration-300"
                   />
-                  <div className="absolute top-4 right-4 bg-emerald-600 text-white px-3 py-1 rounded-full text-sm font-medium">
-                    Featured
-                  </div>
+                  {property.isFeatured && (
+                    <div className="absolute top-4 right-4 bg-emerald-600 text-white px-3 py-1 rounded-full text-sm font-medium">
+                      Featured
+                    </div>
+                  )}
                 </div>
                 <div className="p-6">
-                  <h3 className="font-bold text-xl mb-2 text-gray-800">Modern Apartment</h3>
-                  <p className="text-gray-500 text-sm mb-3 flex items-center">
-                    <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
-                    </svg>
-                    Lagos, Nigeria
+                  <div className="flex items-start justify-between mb-2">
+                    <h3 className="font-bold text-xl text-gray-800 flex-1 pr-2">{property.title}</h3>
+                    {property.isVerified && (
+                      <div className="w-4 h-4 bg-emerald-500 rounded-full flex-shrink-0"></div>
+                    )}
+                  </div>
+                  <p className="text-gray-500 text-sm mb-2 flex items-center">
+                    <MapPin size={16} className="mr-1 text-gray-400" />
+                    {property.location}
                   </p>
-                  <p className="text-emerald-600 font-bold text-xl">₦1,200,000 / year</p>
-                  <button className="mt-4 w-full bg-gray-100 hover:bg-emerald-600 hover:text-white text-gray-700 font-medium py-2 rounded-lg transition-colors duration-200">
+                  <div className="flex flex-wrap gap-1 mb-3 text-xs text-gray-600">
+                    <span className="px-2 py-1 bg-gray-100 rounded-full">{property.type}</span>
+                    <span className="px-2 py-1 bg-gray-100 rounded-full">{property.bedrooms} Beds</span>
+                    <span className="px-2 py-1 bg-gray-100 rounded-full">{property.bathrooms} Baths</span>
+                    <span className="px-2 py-1 bg-gray-100 rounded-full">{property.area}</span>
+                  </div>
+                  <div className="flex items-center mb-2">
+                    <div className="flex text-amber-400 mr-2">
+                      {[...Array(5)].map((_, i) => (
+                        <Star
+                          key={i}
+                          size={16}
+                          fill={i < Math.floor(property.rating) ? "currentColor" : "none"}
+                          className="mr-1"
+                        />
+                      ))}
+                    </div>
+                    <span className="text-sm text-gray-600">{property.rating}</span>
+                  </div>
+                  <p className="text-emerald-600 font-bold text-xl mb-3">
+                    {formatPrice(property.price)} / {property.period}
+                  </p>
+                  <div className="mb-3">
+                    <p className="text-xs text-gray-500">Amenities: {property.amenities.slice(0, 2).join(", ")}{property.amenities.length > 2 ? " + more" : ""}</p>
+                  </div>
+                  <button className="w-full bg-gray-100 hover:bg-emerald-600 hover:text-white text-gray-700 font-medium py-2 rounded-lg transition-colors duration-200">
                     View Details
                   </button>
                 </div>
@@ -93,25 +206,25 @@ const Home = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             {[
               { 
-                icon: "🔍", 
+                icon: <Search size={32} />, 
                 title: "Search Properties", 
                 desc: "Browse through thousands of verified listings across Nigeria",
                 color: "from-emerald-500 to-teal-500"
               },
               { 
-                icon: "🤝", 
+                icon: <Users size={32} />, 
                 title: "Connect Securely", 
                 desc: "Message landlords and agencies directly through our platform",
                 color: "from-teal-500 to-cyan-500"
               },
               { 
-                icon: "📅", 
+                icon: <Calendar size={32} />, 
                 title: "Schedule Visit", 
                 desc: "Book property viewings at your convenient time",
                 color: "from-cyan-500 to-blue-500"
               },
               { 
-                icon: "🏡", 
+                icon: <HomeIcon size={32} />, 
                 title: "Move In", 
                 desc: "Complete paperwork and move into your dream home",
                 color: "from-amber-500 to-orange-500"
@@ -121,7 +234,7 @@ const Home = () => {
                 key={index}
                 className="bg-white rounded-2xl shadow-lg p-8 hover:shadow-xl transform hover:scale-105 transition-all duration-300 border border-gray-100"
               >
-                <div className={`w-16 h-16 mx-auto mb-6 bg-gradient-to-r ${step.color} rounded-2xl flex items-center justify-center text-2xl shadow-lg`}>
+                <div className={`w-16 h-16 mx-auto mb-6 bg-gradient-to-r ${step.color} rounded-2xl flex items-center justify-center text-white shadow-lg`}>
                   {step.icon}
                 </div>
                 <h3 className="font-bold text-xl mb-3 text-gray-800">{step.title}</h3>
@@ -172,9 +285,7 @@ const Home = () => {
               >
                 <div className="flex mb-4">
                   {[...Array(testimonial.rating)].map((_, i) => (
-                    <svg key={i} className="w-5 h-5 text-amber-400 fill-current" viewBox="0 0 20 20">
-                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                    </svg>
+                    <Star key={i} className="w-5 h-5 text-amber-400 fill-current mr-1" />
                   ))}
                 </div>
                 <p className="text-gray-700 mb-6 leading-relaxed italic">
