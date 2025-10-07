@@ -256,3 +256,5 @@ export const propertiesData = [
       "Modern office space in prime business district with excellent connectivity.",
   },
 ];
+
+export default propertiesData;
