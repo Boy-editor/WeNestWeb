@@ -6,8 +6,8 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        primary: '#0055FF',       // landing page blue
-        secondary: '#00AFFF',     // light blue accent
+        primary: '#003334',       // landing page green
+        secondary: '#e6b653',     // dark yellow accent
         darkgray: '#1F1F1F',      // main text
         lightgray: '#F5F5F5',     // background
       },
