@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useLayoutEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { User } from "lucide-react";
+import { User, House } from "lucide-react";
+import { useAuth } from "../contexts/useAuth";
 import logoDark from "/assets/logo/WENEST3.png"; // dark logo (for white header)
- import logoLight from "/assets/logo/WENEST1.png"; // light/white logo (for transparent header)
+import logoLight from "/assets/logo/WENEST1.png"; // light/white logo (for transparent header)
 
 const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -11,6 +12,7 @@ const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const location = useLocation();
+  const { user } = useAuth();
 
   // Determine current page based on URL
   useEffect(() => {
@@ -22,7 +24,7 @@ const Header = () => {
       "/about": "Pages",
       "/our-services": "Pages",
       "/pricing": "Pages",
-      "/contact": "Pages",
+      "/contact": "Contact",
       "/faqs": "Pages",
       "/privacy-policy": "Pages",
       "/blog": "Blog",
@@ -92,6 +94,7 @@ const Header = () => {
     { name: "Contact Us", href: "/contact" },
     { name: "FAQs", href: "/faqs" },
     { name: "Privacy Policy", href: "/privacy-policy" },
+    { name: "Terms of Service", href: "/terms-of-service" },
   ];
 
   return (
@@ -102,7 +105,7 @@ const Header = () => {
         {/* Logo */}
         <Link to="/" className="flex items-center flex-shrink-0" onClick={() => handleNavClick("Home")}>
           {/* Use two logo files if possible; fallback to single */}
-           <img src={isScrolled ? logoDark : logoLight} alt="WeNest Logo" className="w-36" /> 
+          <img src={isScrolled ? logoDark : logoLight} alt="WeNest Logo" className="w-36" /> 
           {/*<img
             src="/assets/logo/WE NEST 1.png"
             alt="WeNest Logo"
@@ -204,37 +207,86 @@ const Header = () => {
           </Link>
 
           <Link
-            to="/dashboard"
-            onClick={() => handleNavClick("Dashboard")}
+            to="/Contact"
+            onClick={() => handleNavClick("Contact")}
             className={`font-medium transition-colors duration-200 relative group rounded-md px-2 py-1 ${
-              currentPage === "Dashboard"
+              currentPage === "Contact"
                 ? "text-emerald-600"
                 : navTextClass + " hover:text-emerald-600"
             }`}
           >
-            Dashboard
+            Contact
             <span
               className={`absolute -bottom-1 left-2 h-0.5 bg-gradient-to-r from-emerald-600 to-teal-600 transition-all duration-300 ${
-                currentPage === "Dashboard" ? "w-[calc(100%-16px)]" : "w-0 group-hover:w-[calc(100%-16px)]"
+                currentPage === "Contact" ? "w-[calc(100%-16px)]" : "w-0 group-hover:w-[calc(100%-16px)]"
               }`}
             />
           </Link>
+
+          {user && (
+            <Link
+              to="/dashboard"
+              onClick={() => handleNavClick("Dashboard")}
+              className={`font-medium transition-colors duration-200 relative group rounded-md px-2 py-1 ${
+                currentPage === "Dashboard"
+                  ? "text-emerald-600"
+                  : navTextClass + " hover:text-emerald-600"
+              }`}
+            >
+              Dashboard
+              <span
+                className={`absolute -bottom-1 left-2 h-0.5 bg-gradient-to-r from-emerald-600 to-teal-600 transition-all duration-300 ${
+                  currentPage === "Dashboard" ? "w-[calc(100%-16px)]" : "w-0 group-hover:w-[calc(100%-16px)]"
+                }`}
+              />
+            </Link>
+          )}
         </nav>
 
         {/* Auth Buttons - Desktop */}
         <div className="hidden lg:flex space-x-4">
-          <button
-            onClick={() => handleNavClick("Sign Up")}
-            className={`border-2 border-emerald-600 px-5 py-2 rounded-xl font-medium hover:bg-emerald-50 flex items-center space-x-2 transition-all duration-200 ${
-              isMobile || isScrolled ? "text-emerald-600" : "text-white hover:text-emerald-500"
-            }`}
-          >
-            <User size={18} />
-            <span>Sign Up</span>
-          </button>
-          <button className="bg-gradient-to-r from-emerald-600 to-teal-600 text-white px-5 py-2 rounded-xl font-medium hover:shadow-lg transform hover:scale-105 transition-all duration-200">
-            Submit Property
-          </button>
+          {!user ? (
+            <>
+              <Link
+                to="/signup"
+                onClick={() => handleNavClick("Sign Up")}
+                className={`border-2 border-emerald-600 px-5 py-2 rounded-xl font-medium hover:bg-emerald-50 flex items-center space-x-2 transition-all duration-200 ${
+                  isMobile || isScrolled ? "text-emerald-600" : "text-white hover:text-emerald-500"
+                }`}
+              >
+                <User size={18} />
+                <span>Sign Up</span>
+              </Link>
+
+              <Link
+                to="/Login"
+                onClick={() => handleNavClick("Login")}
+                className={`bg-gradient-to-r from-emerald-600 to-teal-600 text-white px-5 py-2 rounded-xl font-medium flex items-center space-x-2 hover:shadow-lg transform hover:scale-105 transition-all duration-200'
+                }`}
+              >
+                <House size={18} />
+                <span>Submit Property</span>
+              </Link>
+             {/* <button className="bg-gradient-to-r from-emerald-600 to-teal-600 text-white px-5 py-2 rounded-xl font-medium hover:shadow-lg transform hover:scale-105 transition-all duration-200">
+                Submit Property
+              </button>*/}
+            </>
+          ) : (
+            <>
+              <Link
+                to="/dashboard"
+                className={`border-2 border-emerald-600 px-5 py-2 rounded-xl font-medium hover:bg-emerald-50 flex items-center space-x-2 transition-all duration-200 ${
+                  isMobile || isScrolled ? "text-emerald-600" : "text-white hover:text-emerald-500"
+                }`}
+              >
+                <User size={18} />
+                <span>Dashboard</span>
+              </Link>
+              <button className="bg-gradient-to-r from-emerald-600 to-teal-600 text-white px-5 py-2 rounded-xl font-medium hover:shadow-lg transform hover:scale-105 transition-all duration-200">
+                Submit Property
+              </button>
+            </>
+          )}
         </div>
 
         {/* Mobile Menu Button */}
@@ -326,30 +378,73 @@ const Header = () => {
             </Link>
 
             <Link
-              to="/dashboard"
+              to="/contact"
               className={`block font-medium py-2 px-4 rounded-lg transition-all duration-200 ${
-                currentPage === "Dashboard"
+                currentPage === "Contact"
                   ? "text-emerald-600 bg-emerald-50 border-l-4 border-emerald-600"
                   : "text-gray-700 hover:text-emerald-600 hover:bg-emerald-50"
               }`}
-              onClick={() => handleNavClick("Dashboard")}
+              onClick={() => handleNavClick("Contact")}
             >
-              Dashboard
+              Contact
             </Link>
+
+            {user && (
+              <Link
+                to="/dashboard"
+                className={`block font-medium py-2 px-4 rounded-lg transition-all duration-200 ${
+                  currentPage === "Dashboard"
+                    ? "text-emerald-600 bg-emerald-50 border-l-4 border-emerald-600"
+                    : "text-gray-700 hover:text-emerald-600 hover:bg-emerald-50"
+                }`}
+                onClick={() => handleNavClick("Dashboard")}
+              >
+                Dashboard
+              </Link>
+            )}
           </nav>
 
           {/* Mobile Auth Buttons */}
           <div className="space-y-3 pt-4 border-t border-gray-200">
-            <button
-              onClick={() => handleNavClick("Sign Up")}
-              className="w-full border-2 border-emerald-600 text-emerald-600 py-3 rounded-xl font-medium hover:bg-emerald-50 transition-all duration-200 flex items-center justify-center space-x-2"
-            >
-              <User size={18} />
-              <span>Sign Up</span>
-            </button>
-            <button className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 text-white py-3 rounded-xl font-medium hover:shadow-lg transition-all duration-200">
-              Submit Property
-            </button>
+            {!user ? (
+              <>
+                <Link
+                  to="/signup"
+                  onClick={() => handleNavClick("Sign Up")}
+                  className="w-full border-2 border-emerald-600 text-emerald-600 py-3 rounded-xl font-medium hover:bg-emerald-50 transition-all duration-200 flex items-center justify-center space-x-2"
+                >
+                  <User size={18} />
+                  <span>Sign Up</span>
+                </Link>
+                
+                <Link
+                to="/Login"
+                onClick={() => handleNavClick("Login")}
+                className={`bg-gradient-to-r from-emerald-600 to-teal-600 text-white px-5 py-2 rounded-xl font-medium flex items-center justify-center space-x-2 hover:shadow-lg transform hover:scale-105 transition-all duration-200'
+                }`}
+              >
+                <House size={18} />
+                <span>Submit Property</span>
+              </Link>
+
+                {/*<button className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 text-white py-3 rounded-xl font-medium hover:shadow-lg transition-all duration-200">
+                  Submit Property
+                </button>*/}
+              </>
+            ) : (
+              <>
+                <Link
+                  to="/dashboard"
+                  className="w-full border-2 border-emerald-600 text-emerald-600 py-3 rounded-xl font-medium hover:bg-emerald-50 transition-all duration-200 flex items-center justify-center space-x-2"
+                >
+                  <User size={18} />
+                  <span>Dashboard</span>
+                </Link>
+                <button className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 text-white py-3 rounded-xl font-medium hover:shadow-lg transition-all duration-200">
+                  Submit Property
+                </button>
+              </>
+            )}
           </div>
         </div>
       </div>
